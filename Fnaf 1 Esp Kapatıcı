@@ -1,0 +1,63 @@
+local workspace = game:GetService("Workspace")
+
+local highlightColors = {
+    ["Bonnie"] = true,
+    ["Chica"] = true,
+    ["Endo"] = true,
+    ["Foxy"] = true,
+    ["Freddy"] = true,
+    ["Golden Freddy"] = true
+}
+
+-- Highlight varsa güvenli şekilde sil
+local function removeHighlightIfCharacter(child)
+    if highlightColors[child.Name] and child:IsA("Model") then
+        local highlight = child:FindFirstChildOfClass("Highlight")
+        if highlight then
+            highlight.Adornee = nil
+            highlight.Parent = nil
+        end
+    end
+end
+
+-- Mevcut karakterlerdeki highlight'ları sil
+for name, _ in pairs(highlightColors) do
+    local model = workspace:FindFirstChild(name)
+    if model then
+        removeHighlightIfCharacter(model)
+    end
+end
+
+-- Sonradan eklenecek karakterler için bir kez sil
+workspace.ChildAdded:Connect(function(child)
+    removeHighlightIfCharacter(child)
+end)
+
+-- Animatronics > Foxy için güvenli silme
+local function removeSpecialFoxyHighlight()
+    local foxyPath = workspace:FindFirstChild("Animatronics")
+    if foxyPath then
+        local functionalFolder = foxyPath:FindFirstChild("Functional Animatronics")
+        if functionalFolder then
+            local foxy = functionalFolder:FindFirstChild("Foxy")
+            if foxy and foxy:IsA("Model") then
+                local highlight = foxy:FindFirstChildOfClass("Highlight")
+                if highlight then
+                    highlight.Adornee = nil
+                    highlight.Parent = nil
+                end
+            end
+        end
+    end
+end
+
+-- Başlangıçta sil
+removeSpecialFoxyHighlight()
+
+-- Animatronics sonradan eklenirse bir kez sil
+workspace.ChildAdded:Connect(function(child)
+    if child.Name == "Animatronics" then
+        task.wait(1)
+        removeSpecialFoxyHighlight()
+    end
+end)
