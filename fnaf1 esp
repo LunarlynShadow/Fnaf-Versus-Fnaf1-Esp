@@ -4,7 +4,7 @@ local StarterGui = game:GetService("StarterGui")
 StarterGui:SetCore("SendNotification", {
     Title = "Fnaf 1 Script",
     Text = "Fnaf 1 Esp Başarıyla Açıldı! Yapımcı : SHADOWCASE1",
-    Button1 = "Tamamdır!",
+    Button1 = "Tamamdır! ",
     Duration = 5
 })
 
