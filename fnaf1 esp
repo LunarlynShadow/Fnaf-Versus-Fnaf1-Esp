@@ -2,7 +2,7 @@
 local StarterGui = game:GetService("StarterGui")
 
 StarterGui:SetCore("SendNotification", {
-    Title = "☆Vythera 🌌 Fnaf Versus Script",
+    Title = "☆Vythera Fnaf Versus Script",
     Text = "Fnaf 1 Esp Başarıyla Açıldı! Yapımcı : SHADOWCASE1",
     Button1 = "OK",
     Duration = 5
