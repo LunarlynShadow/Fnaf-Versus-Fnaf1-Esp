@@ -1,3 +1,16 @@
+-- 📢 Notification on Load
+local StarterGui = game:GetService("StarterGui")
+
+StarterGui:SetCore("SendNotification", {
+    Title = "☆Vythera 🌌 Sunar : Fnaf 1 Script",
+    Text = "Fnaf 1 Esp Kapatıldı! Yapımcı : SHADOWCASE1",
+    Button1 = "Tamamdır!",
+    Duration = 5
+})
+
+----------------------------------------------------
+-- 🧹 HIGHLIGHT REMOVE SCRIPT
+----------------------------------------------------
 local workspace = game:GetService("Workspace")
 
 local highlightColors = {
@@ -54,7 +67,7 @@ end
 -- Başlangıçta sil
 removeSpecialFoxyHighlight()
 
--- Animatronics sonradan eklenirse bir kez sil
+-- Animatronics sonradan eklendiğinde sil
 workspace.ChildAdded:Connect(function(child)
     if child.Name == "Animatronics" then
         task.wait(1)
