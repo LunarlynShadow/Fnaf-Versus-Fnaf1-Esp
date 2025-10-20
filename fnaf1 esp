@@ -1,71 +1,62 @@
-local workspace = game:GetService("Workspace")
+Callback = function(Value)
+    local workspace = game:GetService("Workspace")
+    local highlights = {}
 
--- Her karakterin özel renkleri
-local highlightColors = {
-    ["Bonnie"] = Color3.fromRGB(81, 46, 255),
-    ["Chica"] = Color3.fromRGB(255, 247, 1),
-    ["Endo"] = Color3.fromRGB(79, 79, 79),
-    ["Foxy"] = Color3.fromRGB(188, 0, 3),
-    ["Freddy"] = Color3.fromRGB(75, 41, 14),
-    ["Golden Freddy"] = Color3.fromRGB(255, 177, 82)
-}
+    local colors = {
+        Bonnie = Color3.fromRGB(81,46,255),
+        Chica = Color3.fromRGB(255,247,1),
+        Endo = Color3.fromRGB(79,79,79),
+        Foxy = Color3.fromRGB(188,0,3),
+        Freddy = Color3.fromRGB(75,41,14),
+        ["Golden Freddy"] = Color3.fromRGB(255,177,82)
+    }
 
--- Highlight ekleme fonksiyonu
-local function addHighlightIfCharacter(child)
-    local color = highlightColors[child.Name]
-    if color and child:IsA("Model") then
-        if not child:FindFirstChildOfClass("Highlight") then
-            local highlight = Instance.new("Highlight")
-            highlight.Adornee = child
-            highlight.FillColor = color
-            highlight.OutlineColor = color
-            highlight.Parent = child
+    local function addHighlight(model, color)
+        if model and not model:FindFirstChildOfClass("Highlight") then
+            local hl = Instance.new("Highlight")
+            hl.Adornee = model
+            hl.FillColor = color
+            hl.OutlineColor = color
+            hl.Parent = model
+            table.insert(highlights, hl)
         end
     end
-end
 
--- Var olan karakterleri kontrol et
-for name, _ in pairs(highlightColors) do
-    local model = workspace:FindFirstChild(name)
-    if model then
-        addHighlightIfCharacter(model)
-    end
-end
+    if Value then
+        -- ESP Aç
+        for name, color in pairs(colors) do
+            local model = workspace:FindFirstChild(name)
+            if model then addHighlight(model, color) end
+        end
 
--- Yeni eklenecek objeleri sürekli dinle
-workspace.ChildAdded:Connect(function(child)
-    addHighlightIfCharacter(child)
-end)
-
----------------------------------------------------------------------
--- 🔥 Ekstra: Animatronics içindeki Functional Animatronics > Foxy
----------------------------------------------------------------------
-local function addSpecialFoxyHighlight()
-    local foxyPath = workspace:FindFirstChild("Animatronics")
-    if foxyPath then
-        local functionalFolder = foxyPath:FindFirstChild("Functional Animatronics")
-        if functionalFolder then
-            local foxy = functionalFolder:FindFirstChild("Foxy")
-            if foxy and foxy:IsA("Model") then
-                if not foxy:FindFirstChildOfClass("Highlight") then
-                    local highlight = Instance.new("Highlight")
-                    highlight.Adornee = foxy
-                    highlight.FillColor = Color3.fromRGB(94, 0, 2)
-                    highlight.OutlineColor = Color3.fromRGB(0, 0, 0)
-                    highlight.Parent = foxy
-                end
+        local animFolder = workspace:FindFirstChild("Animatronics")
+        if animFolder then
+            local functional = animFolder:FindFirstChild("Functional Animatronics")
+            if functional then
+                local foxy = functional:FindFirstChild("Foxy")
+                addHighlight(foxy, Color3.fromRGB(94,0,2))
             end
         end
+
+        -- Yeni eklenecekleri dinle
+        highlights.ChildAddedConnection = workspace.ChildAdded:Connect(function(child)
+            if colors[child.Name] then addHighlight(child, colors[child.Name]) end
+            if child.Name == "Animatronics" then
+                task.wait(1)
+                local functional = child:FindFirstChild("Functional Animatronics")
+                if functional then
+                    addHighlight(functional:FindFirstChild("Foxy"), Color3.fromRGB(94,0,2))
+                end
+            end
+        end)
+    else
+        -- ESP Kapat
+        for _, hl in pairs(highlights) do
+            if hl then hl:Destroy() end
+        end
+        highlights = {}
+        if highlights.ChildAddedConnection then
+            highlights.ChildAddedConnection:Disconnect()
+        end
     end
 end
-
--- Script çalışınca hemen dener
-addSpecialFoxyHighlight()
-
--- Eğer sonradan eklenecekse dinlemeye devam et
-workspace.ChildAdded:Connect(function(child)
-    if child.Name == "Animatronics" then
-        task.wait(1)
-        addSpecialFoxyHighlight()
-    end
-end)
