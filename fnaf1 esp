@@ -1,3 +1,16 @@
+-- 📢 Notification on Load
+local StarterGui = game:GetService("StarterGui")
+
+StarterGui:SetCore("SendNotification", {
+    Title = "Fnaf Versus Script",
+    Text = "Fnaf 1 Esp Başarıyla Açıldı! Yapımcı : SHADOWCASE1",
+    Button1 = "OK",
+    Duration = 5
+})
+
+----------------------------------------------------
+-- 🎨 HIGHLIGHT SCRIPT
+----------------------------------------------------
 local workspace = game:GetService("Workspace")
 
 -- Her karakterin özel renkleri
